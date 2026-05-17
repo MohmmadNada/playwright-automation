@@ -1,0 +1,29 @@
+{
+  "name": "playwright-automation",
+  "version": "1.0.0",
+  "description": "A scalable Playwright automation framework for end-to-end Web UI and API testing, built with TypeScript following industry best practices and design patterns.",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test",
+    "test:ui": "playwright test tests/ui",
+    "test:api": "playwright test tests/api",
+    "test:headed": "playwright test --headed"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MohmmadNada/playwright-automation.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/MohmmadNada/playwright-automation/issues"
+  },
+  "homepage": "https://github.com/MohmmadNada/playwright-automation#readme",
+  "devDependencies": {
+    "@playwright/cli": "^0.1.13",
+    "@playwright/test": "^1.60.0",
+    "@types/node": "^25.8.0"
+  }
+}
