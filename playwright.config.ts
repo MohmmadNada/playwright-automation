@@ -1,7 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
-  testDir: './tests',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
@@ -16,17 +15,28 @@ export default defineConfig({
   projects: [
     {
       name: 'Google Chrome',
+      testMatch: 'tests/ui/**',
       use: {
         ...devices['Desktop Chrome'],
         channel: 'chrome',
+        baseURL: 'https://www.saucedemo.com',
         launchOptions: { args: ['--start-maximized'] },
       },
     },
     {
       name: 'Mozilla Firefox',
+      testMatch: 'tests/ui/**',
       use: {
         ...devices['Desktop Firefox'],
+        baseURL: 'https://www.saucedemo.com',
         launchOptions: { args: ['--start-maximized'] },
+      },
+    },
+    {
+      name: 'API',
+      testMatch: 'tests/api/**',
+      use: {
+        baseURL: 'https://simple-books-api.glitch.me',
       },
     },
   ],

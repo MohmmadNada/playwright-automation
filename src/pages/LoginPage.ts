@@ -8,6 +8,10 @@ export class LoginPage {
   private get loginButton() { return this.page.locator('[data-test="login-button"]'); }
   private get errorMessage() { return this.page.locator('[data-test="error"]'); }
 
+  async goto(): Promise<void> {
+    await this.page.goto('/');
+  }
+
   async login(username: string, password: string): Promise<void> {
     await this.usernameInput.fill(username);
     await this.passwordInput.fill(password);

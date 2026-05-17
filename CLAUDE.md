@@ -35,6 +35,13 @@ npx playwright show-report reports                 # open HTML report locally
 | Reports | Playwright HTML reporter → `reports/` |
 | Node | LTS (see `package.json` `engines` field) |
 
+### Base URLs
+Each Playwright project declares its own `baseURL` — never hardcode full URLs in test files or page objects:
+- UI projects (Chrome, Firefox): `https://www.saucedemo.com` — use `page.goto('/')`, `page.goto('/inventory.html')`, etc.
+- API project: `https://simple-books-api.glitch.me` — the `request` context resolves paths automatically.
+
+The only exception is `global-setup.ts`, which runs outside project context and must use the full URL directly.
+
 ---
 
 ## 2. Folder Structure
@@ -109,6 +116,7 @@ All external test inputs live in `src/data/*.json`. Parametrised scenarios (e.g.
 
 ### General
 - No comments unless the WHY is non-obvious (a hidden constraint, a workaround, a subtle invariant)
+- Add JSDoc to functions and methods only when the behaviour would surprise a reader — e.g. inclusive/exclusive range bounds, floating-point rounding, uniqueness guarantees. Self-explanatory names need no JSDoc
 - No dead code, no `console.log` left in committed files
 - DRY: if a sequence repeats across two tests, it belongs in a page method or a fixture
 
@@ -119,7 +127,7 @@ All external test inputs live in `src/data/*.json`. Parametrised scenarios (e.g.
 - **One concern per test** — each test case asserts one behaviour; setup steps are not assertions
 - **Use Playwright auto-waits** — never add `waitForTimeout`. Use `waitForSelector`, `waitForURL`, or rely on locator auto-waiting
 - **Assertion messages** — always pass a message to `expect()` on non-obvious assertions so failures are self-explanatory
-- **Test IDs in names** — test titles must start with the TC ID (e.g. `TC_UI_001 — Valid Login`) for traceability and `--grep` targeting
+- **Test IDs in names** — test titles must start with the TC ID followed by a behaviour-first description: `TC_UI_001 — should redirect to inventory page after valid login`. The ID provides traceability and `--grep` targeting; the description makes failing tests self-documenting without needing a lookup table. Never use vague labels like `TC_UI_001 — Valid Login`
 - **Serial API tests** — `tests/api/orders.spec.ts` uses `test.describe.configure({ mode: 'serial' })` because TC_API_002–004 depend on the `orderId` created in TC_API_001. Never remove this
 - **Dynamic data for API** — use `randomEmail()` from helpers for API client registration to avoid state conflicts between runs
 - **No login repetition** — UI tests that need an authenticated state use `storageState.json` via fixture; only the global setup performs the actual login
@@ -130,11 +138,13 @@ All external test inputs live in `src/data/*.json`. Parametrised scenarios (e.g.
 
 | Anti-Pattern | Why / What to do instead |
 |---|---|
-| Locators in test files | Breaks POM. Move all `page.locator()` calls into the relevant page class |
+| Any `page.*` call in a spec file | Breaks POM. Spec files must only call page object methods and make assertions — all browser interaction (`goto`, `locator`, `fill`, `click`, etc.) belongs in the page class |
+| Data manipulation logic in spec files | Sorting, filtering, and slicing fetched data is a "how" — it belongs in a page method (e.g. `getTopProductsByPrice(n)`). Spec files only express intent: fetch, act, assert |
 | Raw `request.*` calls in tests | Breaks API client pattern. Use `BooksApiClient` methods |
 | `page.waitForTimeout()` / `sleep()` | Causes flakiness. Use Playwright's built-in auto-waits or explicit `waitFor*` |
 | `any` type in TypeScript | Defeats strict typing. Define an interface or type alias |
 | Hardcoded credentials in test files | Use `src/data/ui-test-data.json` and read at runtime |
+| Magic numbers in spec files | Hard-coded values that define test scope (counts, thresholds) belong in the relevant data JSON file. Spec files read from data, they don't define it |
 | Importing `test` from `@playwright/test` in spec files | Import from the relevant fixture file instead so page objects are injected |
 | Separate test blocks per scenario variant | Use `test.each()` with the JSON data array |
 | Batching multiple phases into one commit | One commit per phase — keep git history meaningful |
@@ -146,7 +156,9 @@ All external test inputs live in `src/data/*.json`. Parametrised scenarios (e.g.
 
 ### Page Objects (`src/pages/`)
 - Constructor signature: `constructor(private readonly page: Page) {}`
-- Locators as `private` getters — never `public`
+- **Spec files must never call Playwright APIs directly** — no `page.goto()`, `page.locator()`, `page.fill()`, `page.click()`, or any `page.*` call belongs in a spec file. Every browser interaction is encapsulated in a page object method. Spec files only orchestrate calls to page methods and make assertions
+- Each page class must expose a `goto()` method that navigates to its own relative URL path — this is one application of the rule above
+- All locators must be defined as `private` getters at the top of the class — never call `this.page.locator()` inline inside a method body
 - Methods return `void` for actions, or a specific typed value for queries (e.g. `string[]`, `number`)
 - No assertions inside page methods — assertions belong in the test
 - No direct JSON imports — page classes receive data as method parameters
@@ -168,10 +180,11 @@ All external test inputs live in `src/data/*.json`. Parametrised scenarios (e.g.
 ## 8. Helper / Utility Rules (`src/utils/helpers.ts`)
 
 - All functions are **pure** — no side effects, no state, no imports from Playwright
-- Only three responsibilities: generate random strings, emails, and numbers
+- Responsibilities: generate random strings, emails, and numbers; and provide pure calculation utilities (e.g. `sumPrices`) that keep computation logic out of spec files
 - `randomEmail()` must include a timestamp or UUID suffix to guarantee uniqueness across parallel or back-to-back runs
-- No business logic — helpers know nothing about SauceDemo or the Books API
-- Consumed by `global-setup.ts` (for dynamic API registration email) and test files via fixture scope
+- Domain types (e.g. `ProductWithPrice`) may be imported when needed for typed utility functions
+- No browser interaction or test orchestration — helpers are pure functions only
+- Consumed by `global-setup.ts` (for dynamic API registration email), test files, and page objects
 
 ---
 

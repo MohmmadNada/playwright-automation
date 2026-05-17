@@ -5,5 +5,7 @@
     { "username": "standard_user", "password": "", "scenario": "no_password" },
     { "username": "wrong_user", "password": "wrong_pass", "scenario": "invalid_creds" }
   ],
-  "checkoutInfo": { "firstName": "John", "lastName": "Doe", "postalCode": "12345" }
+  "checkoutInfo": { "firstName": "John", "lastName": "Doe", "postalCode": "12345" },
+  "checkout": { "topProductsCount": 2 },
+  "sort": { "nameDesc": "za" }
 }
