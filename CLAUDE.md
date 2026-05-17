@@ -116,7 +116,7 @@ All external test inputs live in `src/data/*.json`. Parametrised scenarios (e.g.
 
 ### General
 - No comments unless the WHY is non-obvious (a hidden constraint, a workaround, a subtle invariant)
-- Add JSDoc to functions and methods only when the behaviour would surprise a reader — e.g. inclusive/exclusive range bounds, floating-point rounding, uniqueness guarantees. Self-explanatory names need no JSDoc
+- Add JSDoc to functions and methods only when the behaviour would surprise a reader. JSDoc is not documentation for documentation's sake — it's a warning sign that a method has a non-obvious contract. Ask: "Would a reader be surprised by this behaviour if they only read the name and types?" If no, skip it. Common cases that warrant JSDoc: uniqueness guarantees, inclusive/exclusive bounds, floating-point rounding, side effects not obvious from the name
 - No dead code, no `console.log` left in committed files
 - DRY: if a sequence repeats across two tests, it belongs in a page method or a fixture
 
