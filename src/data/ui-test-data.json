@@ -1,0 +1,9 @@
+{
+  "validUser": { "username": "standard_user", "password": "secret_sauce" },
+  "invalidScenarios": [
+    { "username": "", "password": "secret_sauce", "scenario": "no_username" },
+    { "username": "standard_user", "password": "", "scenario": "no_password" },
+    { "username": "wrong_user", "password": "wrong_pass", "scenario": "invalid_creds" }
+  ],
+  "checkoutInfo": { "firstName": "John", "lastName": "Doe", "postalCode": "12345" }
+}
