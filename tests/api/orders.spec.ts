@@ -43,7 +43,7 @@ test.describe('Orders API', () => {
       expect(order!.customerName, 'Customer name should be updated').toBe(testData.updatedCustomerName);
     });
 
-    test('TC_API_004 — should delete the order and return 404 on subsequent fetch', async ({ booksApi }) => {
+    test(`TC_API_004 — should delete the order and return ${HttpStatus.NOT_FOUND} on subsequent fetch`, async ({ booksApi }) => {
       const { status: deleteStatus } = await booksApi.deleteOrder(token, orderId);
 
       expect(deleteStatus, `Delete order should return ${HttpStatus.NO_CONTENT}`).toBe(HttpStatus.NO_CONTENT);
