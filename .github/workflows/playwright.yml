@@ -1,0 +1,47 @@
+name: Playwright Tests
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    # Daily at 00:00 UTC — 03:00 Amman (UTC+3)
+    - cron: '0 0 * * *'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+  # If two pushes happen quickly (e.g. two PRs merged back to back), the first run gets cancelled and only the latest runs. Saves CI minutes and avoids noise.
+
+jobs:
+  test:
+    name: Run Playwright Tests
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Run tests
+        run: npm test
+
+      - name: Upload test report
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        # uploads even when tests fail, so you can always investigate failures
+        with:
+          name: playwright-report-${{ github.run_id }}
+          path: reports/
+          retention-days: 30
