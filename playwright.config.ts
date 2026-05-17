@@ -36,7 +36,7 @@ export default defineConfig({
       name: 'API',
       testMatch: 'tests/api/**',
       use: {
-        baseURL: 'https://simple-books-api.glitch.me',
+        baseURL: 'https://simple-books-api.click',
       },
     },
   ],

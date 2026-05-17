@@ -1,4 +1,5 @@
 {
+  "clientName": "test-client",
   "bookId": 1,
   "customerName": "Test User",
   "updatedCustomerName": "Updated User"
