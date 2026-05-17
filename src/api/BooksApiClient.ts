@@ -1,24 +1,6 @@
 import { APIRequestContext } from '@playwright/test';
-
-export interface Order {
-  id: string;
-  bookId: number;
-  customerName: string;
-}
-
-export interface CreateOrderResponse {
-  status: number;
-  orderId: string;
-}
-
-export interface GetOrderResponse {
-  status: number;
-  order?: Order;
-}
-
-export interface StatusResponse {
-  status: number;
-}
+import { Order, CreateOrderResponse, GetOrderResponse, StatusResponse } from '@src/types/api.types';
+import { HttpStatus } from '@src/constants/http-status';
 
 export class BooksApiClient {
   private static readonly Routes = {
@@ -62,7 +44,7 @@ export class BooksApiClient {
     const response = await this.request.get(BooksApiClient.Routes.order(orderId), {
       headers: this.authHeader(token),
     });
-    if (response.status() !== 200) {
+    if (response.status() !== HttpStatus.OK) {
       return { status: response.status() };
     }
     return { status: response.status(), order: await response.json() as Order };
