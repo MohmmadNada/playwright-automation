@@ -2,7 +2,7 @@ import { test, expect } from '@src/fixtures/ui.fixtures';
 import testData from '@src/data/ui-test-data.json';
 import { sumPrices } from '@src/utils/helpers';
 
-test.use({ storageState: 'storageState.json' });
+test.use({ storageState: 'storageState.json' }); // TO_CHECK
 
 test('TC_UI_004 — should complete checkout and confirm order for the 2 most expensive items', async ({
   productsPage,
