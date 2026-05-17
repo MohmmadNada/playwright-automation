@@ -128,7 +128,7 @@ All external test inputs live in `src/data/*.json`. Parametrised scenarios (e.g.
 - **Use Playwright auto-waits** — never add `waitForTimeout`. Use `waitForSelector`, `waitForURL`, or rely on locator auto-waiting
 - **Assertion messages** — always pass a message to `expect()` on non-obvious assertions so failures are self-explanatory
 - **Test IDs in names** — test titles must start with the TC ID followed by a behaviour-first description: `TC_UI_001 — should redirect to inventory page after valid login`. The ID provides traceability and `--grep` targeting; the description makes failing tests self-documenting without needing a lookup table. Never use vague labels like `TC_UI_001 — Valid Login`
-- **Serial API tests** — `tests/api/orders.spec.ts` uses `test.describe.configure({ mode: 'serial' })` because TC_API_002–004 depend on the `orderId` created in TC_API_001. Never remove this
+- **API test isolation** — each API test must set up its own state in `beforeEach` (authenticate + create order). Never share `token` or `orderId` across tests via describe-scope variables without `beforeEach` — shared state causes cascading failures and hides the true failure point
 - **Dynamic data for API** — use `randomEmail()` from helpers for API client registration to avoid state conflicts between runs
 - **No login repetition** — UI tests that need an authenticated state use `storageState.json` via fixture; only the global setup performs the actual login
 
@@ -148,7 +148,6 @@ All external test inputs live in `src/data/*.json`. Parametrised scenarios (e.g.
 | Importing `test` from `@playwright/test` in spec files | Import from the relevant fixture file instead so page objects are injected |
 | Separate test blocks per scenario variant | Use `test.each()` with the JSON data array |
 | Batching multiple phases into one commit | One commit per phase — keep git history meaningful |
-| Parallelising the API order tests | They share `orderId` state — serial mode is required |
 
 ---
 

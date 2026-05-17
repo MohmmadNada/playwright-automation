@@ -22,7 +22,7 @@ export interface StatusResponse {
 
 export class BooksApiClient {
   private static readonly Routes = {
-    clients: '/api-clients/',
+    clients: '/api-clients',
     orders: '/orders',
     order: (id: string) => `/orders/${id}`,
   };
