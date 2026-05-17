@@ -6,6 +6,20 @@ export interface Order {
   customerName: string;
 }
 
+export interface CreateOrderResponse {
+  status: number;
+  orderId: string;
+}
+
+export interface GetOrderResponse {
+  status: number;
+  order?: Order;
+}
+
+export interface StatusResponse {
+  status: number;
+}
+
 export class BooksApiClient {
   private static readonly Routes = {
     clients: '/api-clients/',
@@ -35,32 +49,37 @@ export class BooksApiClient {
     token: string,
     bookId: number,
     customerName: string,
-  ): Promise<{ orderId: string }> {
+  ): Promise<CreateOrderResponse> {
     const response = await this.request.post(BooksApiClient.Routes.orders, {
       headers: this.authHeader(token),
       data: { bookId, customerName },
     });
     const body = await response.json();
-    return { orderId: body.orderId as string };
+    return { status: response.status(), orderId: body.orderId as string };
   }
 
-  async getOrder(token: string, orderId: string): Promise<Order> {
+  async getOrder(token: string, orderId: string): Promise<GetOrderResponse> {
     const response = await this.request.get(BooksApiClient.Routes.order(orderId), {
       headers: this.authHeader(token),
     });
-    return response.json() as Promise<Order>;
+    if (response.status() !== 200) {
+      return { status: response.status() };
+    }
+    return { status: response.status(), order: await response.json() as Order };
   }
 
-  async updateOrder(token: string, orderId: string, customerName: string): Promise<void> {
-    await this.request.patch(BooksApiClient.Routes.order(orderId), {
+  async updateOrder(token: string, orderId: string, customerName: string): Promise<StatusResponse> {
+    const response = await this.request.patch(BooksApiClient.Routes.order(orderId), {
       headers: this.authHeader(token),
       data: { customerName },
     });
+    return { status: response.status() };
   }
 
-  async deleteOrder(token: string, orderId: string): Promise<void> {
-    await this.request.delete(BooksApiClient.Routes.order(orderId), {
+  async deleteOrder(token: string, orderId: string): Promise<StatusResponse> {
+    const response = await this.request.delete(BooksApiClient.Routes.order(orderId), {
       headers: this.authHeader(token),
     });
+    return { status: response.status() };
   }
 }
