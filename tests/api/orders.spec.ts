@@ -13,7 +13,7 @@ test.describe('Orders API', () => {
     expect(response.orderId, 'Order ID should be returned').toBeTruthy();
   });
 
-  test.describe('with an existing order', () => {
+  test.describe('given an existing order', () => {
     let token: string;
     let orderId: string;
 

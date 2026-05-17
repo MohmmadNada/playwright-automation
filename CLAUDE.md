@@ -129,6 +129,7 @@ All external test inputs live in `src/data/*.json`. Parametrised scenarios (e.g.
 - **Assertion messages** — always pass a message to `expect()` on non-obvious assertions so failures are self-explanatory
 - **Test IDs in names** — test titles must start with the TC ID followed by a behaviour-first description: `TC_UI_001 — should redirect to inventory page after valid login`. The ID provides traceability and `--grep` targeting; the description makes failing tests self-documenting without needing a lookup table. Never use vague labels like `TC_UI_001 — Valid Login`
 - **API test isolation** — each API test must set up its own state in `beforeEach` (authenticate + create order). Never share `token` or `orderId` across tests via describe-scope variables without `beforeEach` — shared state causes cascading failures and hides the true failure point
+- **Describe block naming** — top-level `describe` names the feature or resource under test (e.g. `'Orders API'`, `'Login'`). Nested `describe` blocks use `'given <precondition>'` to describe the context explicitly (e.g. `'given an existing order'`). This makes the full test path self-documenting: `Orders API › given an existing order › TC_API_002 — should retrieve…`
 - **Dynamic data for API** — use `randomEmail()` from helpers for API client registration to avoid state conflicts between runs
 - **No login repetition** — UI tests that need an authenticated state use `storageState.json` via fixture; only the global setup performs the actual login
 
