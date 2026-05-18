@@ -8,14 +8,14 @@ test.describe('Orders API', () => {
     const token = await booksApi.authenticate(testData.clientName, randomEmail());
     let orderId!: string;
 
-    await test.step('Create order', async () => {
+    await test.step('TC_API_001 — Create order', async () => {
       const { status, orderId: id } = await booksApi.createOrder(token, testData.bookId, testData.customerName);
       expect(status, `Create order should return ${HttpStatus.CREATED}`).toBe(HttpStatus.CREATED);
       expect(id, 'Order ID should be returned').toBeTruthy();
       orderId = id;
     });
 
-    await test.step('Retrieve order', async () => {
+    await test.step('TC_API_002 — Retrieve order', async () => {
       const { status, order } = await booksApi.getOrder(token, orderId);
       expect(status, `Get order should return ${HttpStatus.OK}`).toBe(HttpStatus.OK);
       expect(order, 'Order body should be present').toBeDefined();
@@ -23,7 +23,7 @@ test.describe('Orders API', () => {
       expect(order!.customerName, 'Customer name should match').toBe(testData.customerName);
     });
 
-    await test.step('Update order', async () => {
+    await test.step('TC_API_003 — Update order', async () => {
       const { status } = await booksApi.updateOrder(token, orderId, testData.updatedCustomerName);
       expect(status, `Update order should return ${HttpStatus.NO_CONTENT}`).toBe(HttpStatus.NO_CONTENT);
 
@@ -33,7 +33,7 @@ test.describe('Orders API', () => {
       expect(order!.customerName, 'Customer name should be updated').toBe(testData.updatedCustomerName);
     });
 
-    await test.step('Delete order', async () => {
+    await test.step('TC_API_004 — Delete order', async () => {
       const { status } = await booksApi.deleteOrder(token, orderId);
       expect(status, `Delete order should return ${HttpStatus.NO_CONTENT}`).toBe(HttpStatus.NO_CONTENT);
 
