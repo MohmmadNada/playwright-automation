@@ -12,6 +12,17 @@ type UiFixtures = {
 };
 
 export const test = base.extend<UiFixtures>({
+  // --start-maximized is Chrome-only; Firefox requires viewport to be set programmatically
+  page: async ({ page, browserName }, use) => {
+    if (browserName === 'firefox') {
+      const { width, height } = await page.evaluate(() => ({
+        width: window.screen.availWidth,
+        height: window.screen.availHeight,
+      }));
+      await page.setViewportSize({ width, height });
+    }
+    await use(page);
+  },
   loginPage: async ({ page }, use) => { await use(new LoginPage(page)); },
   productsPage: async ({ page }, use) => { await use(new ProductsPage(page)); },
   cartPage: async ({ page }, use) => { await use(new CartPage(page)); },

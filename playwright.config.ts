@@ -1,4 +1,4 @@
-import { defineConfig, devices } from '@playwright/test';
+import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
   fullyParallel: true,
@@ -17,7 +17,6 @@ export default defineConfig({
       name: 'Google Chrome',
       testMatch: 'tests/ui/**',
       use: {
-        ...devices['Desktop Chrome'],
         channel: 'chrome',
         baseURL: 'https://www.saucedemo.com',
         launchOptions: { args: ['--start-maximized'] },
@@ -27,9 +26,8 @@ export default defineConfig({
       name: 'Mozilla Firefox',
       testMatch: 'tests/ui/**',
       use: {
-        ...devices['Desktop Firefox'],
+        browserName: 'firefox',
         baseURL: 'https://www.saucedemo.com',
-        launchOptions: { args: ['--start-maximized'] },
       },
     },
     {

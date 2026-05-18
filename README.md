@@ -27,7 +27,7 @@ A scalable end-to-end test automation framework built with [Playwright](https://
 ## Prerequisites
 
 - [Node.js v22 LTS](https://nodejs.org/) — use `nvm use` if you have [nvm](https://github.com/nvm-sh/nvm) installed (`.nvmrc` is included)
-- npm (bundled with Node.js)
+- npm v10+ (bundled with Node.js v22)
 
 ---
 
@@ -129,21 +129,21 @@ test file
 
 ### UI Tests — SauceDemo
 
-| TC ID | Description | File |
-|---|---|---|
-| TC_UI_001 | Valid login redirects to Products page | `tests/ui/login.spec.ts` |
-| TC_UI_002 | Invalid login shows correct error (3 data-driven scenarios) | `tests/ui/login.spec.ts` |
-| TC_UI_003 | Products sort Z→A returns correct order | `tests/ui/products.spec.ts` |
-| TC_UI_004 | E2E checkout — top 2 most expensive items, verifies total and confirmation | `tests/ui/checkout.spec.ts` |
+| TC ID | Module | Description | File |
+|---|---|---|---|
+| TC_UI_001 | Login | Valid login redirects to Products page | `tests/ui/login.spec.ts` |
+| TC_UI_002 | Login | Invalid login shows correct error (3 data-driven scenarios) | `tests/ui/login.spec.ts` |
+| TC_UI_003 | Products | Products sort Z→A returns correct order | `tests/ui/products.spec.ts` |
+| TC_UI_004 | Checkout | E2E checkout — top 2 most expensive items, verifies total and confirmation | `tests/ui/checkout.spec.ts` |
 
 ### API Tests — Simple Books API
 
-| TC ID | Description | File |
-|---|---|---|
-| TC_API_001 | Authenticate and create an order (POST) | `tests/api/orders.spec.ts` |
-| TC_API_002 | Retrieve order and verify details (GET) | `tests/api/orders.spec.ts` |
-| TC_API_003 | Update customer name and verify change (PATCH + GET) | `tests/api/orders.spec.ts` |
-| TC_API_004 | Delete order and verify 404 on subsequent fetch (DELETE + GET) | `tests/api/orders.spec.ts` |
+| TC ID | Module | Description | File |
+|---|---|---|---|
+| TC_API_001 | Auth | Authenticate and create an order (POST) | `tests/api/orders.spec.ts` |
+| TC_API_002 | Orders | Retrieve order and verify details (GET) | `tests/api/orders.spec.ts` |
+| TC_API_003 | Orders | Update customer name and verify change (PATCH + GET) | `tests/api/orders.spec.ts` |
+| TC_API_004 | Orders | Delete order and verify 404 on subsequent fetch (DELETE + GET) | `tests/api/orders.spec.ts` |
 
 ---
 

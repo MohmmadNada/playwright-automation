@@ -1,5 +1,5 @@
 import { randomUUID } from 'crypto';
-import { ProductWithPrice } from '@src/pages/ProductsPage';
+import { ProductWithPrice } from '@src/types/ui.types';
 
 export function randomString(length: number): string {
   const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
