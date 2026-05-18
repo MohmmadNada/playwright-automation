@@ -1,10 +1,5 @@
 import { Page } from '@playwright/test';
-
-export interface CheckoutInfo {
-  firstName: string;
-  lastName: string;
-  postalCode: string;
-}
+import { CheckoutInfo } from '@src/types/ui.types';
 
 export class CheckoutPage {
   constructor(private readonly page: Page) {}
@@ -17,6 +12,8 @@ export class CheckoutPage {
   private get finishButton() { return this.page.locator('[data-test="finish"]'); }
   private get confirmationHeader() { return this.page.locator('[data-test="complete-header"]'); }
 
+  // -- Actions --
+
   async fillInfo(info: CheckoutInfo): Promise<void> {
     await this.firstNameInput.fill(info.firstName);
     await this.lastNameInput.fill(info.lastName);
@@ -27,13 +24,15 @@ export class CheckoutPage {
     await this.continueButton.click();
   }
 
+  async finish(): Promise<void> {
+    await this.finishButton.click();
+  }
+
+  // -- Queries --
+
   async getItemsTotal(): Promise<number> {
     const text = await this.itemTotal.innerText();
     return parseFloat(text.replace('Item total: $', ''));
-  }
-
-  async finish(): Promise<void> {
-    await this.finishButton.click();
   }
 
   async getConfirmationMessage(): Promise<string> {

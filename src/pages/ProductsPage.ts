@@ -1,11 +1,5 @@
 import { Page } from '@playwright/test';
-
-export type SortOption = 'az' | 'za' | 'lohi' | 'hilo';
-
-export interface ProductWithPrice {
-  name: string;
-  price: number;
-}
+import { SortOption, ProductWithPrice } from '@src/types/ui.types';
 
 export class ProductsPage {
   static readonly PATH = '/inventory.html';
@@ -19,23 +13,41 @@ export class ProductsPage {
   private get cartLink() { return this.page.locator('.shopping_cart_link'); }
   private get heading() { return this.page.locator('.title'); }
   private get inventoryItems() { return this.page.locator('.inventory_item'); }
+  private addToCartButton(name: string) { return this.inventoryItems.filter({ hasText: name }).locator('button'); }
+
+  // -- Navigation --
 
   async goto(): Promise<void> {
     await this.page.goto(ProductsPage.PATH);
   }
 
-  async getHeading(): Promise<string> {
-    return this.heading.innerText();
+  async goToCart(): Promise<void> {
+    await this.cartLink.click();
   }
+
+  // -- Actions --
 
   async sortBy(option: SortOption): Promise<void> {
     await this.sortDropdown.selectOption(option);
+  }
+
+  async addToCartByName(name: string): Promise<void> {
+    await this.addToCartButton(name).click();
+  }
+
+  // -- Queries --
+
+  async getHeading(): Promise<string> {
+    return this.heading.innerText();
   }
 
   async getProductNames(): Promise<string[]> {
     return this.productNames.allInnerTexts();
   }
 
+  /**
+   * Returns all products on the page with prices parsed as numbers (dollar sign stripped).
+   */
   async getProductsWithPrices(): Promise<ProductWithPrice[]> {
     const names = await this.productNames.allInnerTexts();
     const prices = await this.productPrices.allInnerTexts();
@@ -52,16 +64,5 @@ export class ProductsPage {
   async getTopProductsByPrice(count: number): Promise<ProductWithPrice[]> {
     const products = await this.getProductsWithPrices();
     return [...products].sort((a, b) => b.price - a.price).slice(0, count);
-  }
-
-  async addToCartByName(name: string): Promise<void> {
-    await this.inventoryItems
-      .filter({ hasText: name })
-      .locator('button')
-      .click();
-  }
-
-  async goToCart(): Promise<void> {
-    await this.cartLink.click();
   }
 }

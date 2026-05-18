@@ -1,5 +1,5 @@
 import { test, expect } from '@src/fixtures/ui.fixtures';
-import { SortOption } from '@src/pages/ProductsPage';
+import { SortOption } from '@src/types/ui.types';
 import testData from '@src/data/ui-test-data.json';
 import { sortDescending } from '@src/utils/helpers';
 

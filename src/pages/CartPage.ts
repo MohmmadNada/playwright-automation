@@ -5,6 +5,8 @@ export class CartPage {
 
   private get checkoutButton() { return this.page.locator('[data-test="checkout"]'); }
 
+  // -- Actions --
+
   async proceedToCheckout(): Promise<void> {
     await this.checkoutButton.click();
   }
