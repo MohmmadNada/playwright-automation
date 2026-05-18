@@ -166,7 +166,7 @@ The pipeline is defined in `.github/workflows/playwright.yml` and runs on two tr
 | Trigger | When |
 |---|---|
 | Push to `main` | Every merge to the main branch |
-| Scheduled | Daily at 00:00 UTC (03:00 Amman, UTC+3) |
+| Scheduled | Daily at 03:30 UTC (06:30 Amman, UTC+3) |
 
 **Pipeline steps:**
 
