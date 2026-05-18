@@ -1,7 +1,8 @@
 import { chromium, FullConfig } from '@playwright/test';
 
 async function globalSetup(_config: FullConfig): Promise<void> {
-  console.log(`[SUITE START] ${new Date().toISOString()}`);
+  // stderr bypasses the reporter's ANSI cursor rewrites, keeping logs visible in the terminal
+  process.stderr.write(`[SUITE START] ${new Date().toISOString()}\n`);
 
   const browser = await chromium.launch();
   const page = await browser.newPage();
